@@ -5,10 +5,12 @@ import edu.cnm.deepdive.cards.model.Suit.Color;
 public class Card implements Comparable<Card> {
   private final Rank rank;
   private final Suit suit;
+  private final String strRepr;
 
   public Card(Rank rank, Suit suit) {
     this.rank = rank;
     this.suit = suit;
+    this.strRepr = "%s %s".formatted(rank, suit);
   }
 
   public Rank getRank() {
@@ -23,20 +25,17 @@ public class Card implements Comparable<Card> {
 
   @Override
   public int compareTo(Card other) {
-//    if (this.getSuit().ordinal() < other.getSuit().ordinal()) {
-//      return -1;
-//    } else if (this.getSuit().ordinal() > other.getSuit().ordinal()) {
-//      return 1;
-//    }
-//
-//    if (this.getRank().ordinal() < other.getRank().ordinal()) {
-//      return -1;
-//    } else if (this.getRank().ordinal() > other.getRank().ordinal()) {
-//      return 1;
-//    }
-//
-//    return 0;
+    int suitCompare = this.suit.compareTo(other.suit);
 
-    throw new UnsupportedOperationException("not yet implemented");
+    if (suitCompare == 0) {
+      suitCompare = this.rank.compareTo(other.rank);
+    }
+
+    return suitCompare;
+  }
+
+  @Override
+  public String toString() {
+    return strRepr;
   }
 }
