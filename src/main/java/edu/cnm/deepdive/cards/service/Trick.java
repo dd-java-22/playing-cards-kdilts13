@@ -54,30 +54,24 @@ public class Trick {
       }
     }
 
-    blackPile.sort(new Comparator<Card>() {
-      @Override
-      public int compare(Card card1, Card card2) {
-        int result = card1.getColor().compareTo(card2.getColor());
+    blackPile.sort((card1, card2) -> {
+      int result = card1.getColor().compareTo(card2.getColor());
 
-        if (result == 0) {
-          result = card1.compareTo(card2);
-        }
-
-        return result;
+      if (result == 0) {
+        result = card1.compareTo(card2);
       }
+
+      return result;
     });
 
-    redPile.sort(new Comparator<>() {
-      @Override
-      public int compare(Card card1, Card card2) {
-        int result = -card1.getColor().compareTo(card2.getColor());
+    redPile.sort((card1, card2) -> {
+      int result = -card1.getColor().compareTo(card2.getColor());
 
-        if (result == 0) {
-          result = card1.compareTo(card2);
-        }
-
-        return result;
+      if (result == 0) {
+        result = card1.compareTo(card2);
       }
+
+      return result;
     });
 
     assert countPileColor(blackPile, Color.BLACK) == countPileColor(redPile, Color.RED);
