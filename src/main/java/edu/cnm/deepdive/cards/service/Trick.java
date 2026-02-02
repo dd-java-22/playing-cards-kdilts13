@@ -54,8 +54,31 @@ public class Trick {
       }
     }
 
-    blackPile.sort(new BlackFirstComparator());
-    redPile.sort(new RedFirstComparator());
+    blackPile.sort(new Comparator<Card>() {
+      @Override
+      public int compare(Card card1, Card card2) {
+        int result = card1.getColor().compareTo(card2.getColor());
+
+        if (result == 0) {
+          result = card1.compareTo(card2);
+        }
+
+        return result;
+      }
+    });
+
+    redPile.sort(new Comparator<>() {
+      @Override
+      public int compare(Card card1, Card card2) {
+        int result = -card1.getColor().compareTo(card2.getColor());
+
+        if (result == 0) {
+          result = card1.compareTo(card2);
+        }
+
+        return result;
+      }
+    });
 
     assert countPileColor(blackPile, Color.BLACK) == countPileColor(redPile, Color.RED);
     assert redPile.size() + blackPile.size() == 26;
@@ -86,33 +109,5 @@ public class Trick {
     }
 
     return count;
-  }
-
-  private static class BlackFirstComparator implements Comparator<Card> {
-
-    @Override
-    public int compare(Card card1, Card card2) {
-      int result = card1.getColor().compareTo(card2.getColor());
-
-      if (result == 0) {
-        result = card1.compareTo(card2);
-      }
-
-      return result;
-    }
-  }
-
-  private static class RedFirstComparator implements Comparator<Card> {
-
-    @Override
-    public int compare(Card card1, Card card2) {
-      int result = -card1.getColor().compareTo(card2.getColor());
-
-      if (result == 0) {
-        result = card1.compareTo(card2);
-      }
-
-      return result;
-    }
   }
 }
