@@ -1,9 +1,10 @@
 package edu.cnm.deepdive.cards.service;
 
-import edu.cnm.deepdive.cards.model.Deck.Card;
+import edu.cnm.deepdive.cards.model.Card;
 import edu.cnm.deepdive.cards.model.Deck;
 import edu.cnm.deepdive.cards.model.Suit.Color;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.random.RandomGenerator;
