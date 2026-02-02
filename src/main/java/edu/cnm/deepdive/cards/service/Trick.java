@@ -69,8 +69,10 @@ public class Trick {
     System.out.println(">> redPile.size() " + redPile.size());
     System.out.println(">> blackPile.size() " + blackPile.size());
 
-    System.out.println(">> countPileColor(redPile, Color.RED) " + countPileColor(redPile, Color.RED));
-    System.out.println(">> countPileColor(blackPile, Color.BLACK) " + countPileColor(blackPile, Color.BLACK));
+    System.out.println(
+        ">> countPileColor(redPile, Color.RED) " + countPileColor(redPile, Color.RED));
+    System.out.println(
+        ">> countPileColor(blackPile, Color.BLACK) " + countPileColor(blackPile, Color.BLACK));
   }
 
   private static int countPileColor(List<Card> pile, Color color) {
@@ -85,32 +87,32 @@ public class Trick {
 
     return count;
   }
-}
 
-class BlackFirstComparator implements Comparator<Card> {
+  private static class BlackFirstComparator implements Comparator<Card> {
 
-  @Override
-  public int compare(Card card1, Card card2) {
-    int result = card1.getColor().compareTo(card2.getColor());
+    @Override
+    public int compare(Card card1, Card card2) {
+      int result = card1.getColor().compareTo(card2.getColor());
 
-    if (result == 0) {
-      result = card1.compareTo(card2);
+      if (result == 0) {
+        result = card1.compareTo(card2);
+      }
+
+      return result;
     }
-
-    return result;
   }
-}
 
-class RedFirstComparator implements Comparator<Card> {
+  private static class RedFirstComparator implements Comparator<Card> {
 
-  @Override
-  public int compare(Card card1, Card card2) {
-    int result = -card1.getColor().compareTo(card2.getColor());
+    @Override
+    public int compare(Card card1, Card card2) {
+      int result = -card1.getColor().compareTo(card2.getColor());
 
-    if (result == 0) {
-      result = card1.compareTo(card2);
+      if (result == 0) {
+        result = card1.compareTo(card2);
+      }
+
+      return result;
     }
-
-    return result;
   }
 }
