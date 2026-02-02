@@ -12,7 +12,7 @@ public class Main {
 
     Trick trick = new Trick(deck, rng);
 
-    trick.perform();
+    trick.perform(true);
     trick.reveal();
   }
 }
