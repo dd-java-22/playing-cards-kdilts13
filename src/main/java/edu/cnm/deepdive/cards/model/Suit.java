@@ -1,10 +1,30 @@
 package edu.cnm.deepdive.cards.model;
 
 public enum Suit {
-  CLUBS(Color.BLACK),
-  DIAMONDS(Color.RED),
-  HEARTS(Color.RED),
-  SPADES(Color.BLACK);
+  CLUBS(Color.BLACK) {
+    @Override
+    public String toString() {
+      return "\u2663";
+    }
+  },
+  DIAMONDS(Color.RED) {
+    @Override
+    public String toString() {
+      return "\u2662";
+    }
+  },
+  HEARTS(Color.RED) {
+    @Override
+    public String toString() {
+      return "\u2661";
+    }
+  },
+  SPADES(Color.BLACK) {
+    @Override
+    public String toString() {
+      return "\u2660";
+    }
+  };
 
   private final Color color;
 
