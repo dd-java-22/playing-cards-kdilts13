@@ -54,26 +54,9 @@ public class Trick {
       }
     }
 
-    //noinspection ComparatorCombinators
-    blackPile.sort((card1, card2) -> {
-      int result = card1.getColor().compareTo(card2.getColor());
+    blackPile.sort(Comparator.comparing(Card::getColor).thenComparing(Card::compareTo));
 
-      if (result == 0) {
-        result = card1.compareTo(card2);
-      }
-
-      return result;
-    });
-
-    redPile.sort((card1, card2) -> {
-      int result = -card1.getColor().compareTo(card2.getColor());
-
-      if (result == 0) {
-        result = card1.compareTo(card2);
-      }
-
-      return result;
-    });
+    redPile.sort(Comparator.comparing(Card::getColor, Comparator.reverseOrder()).thenComparing(Comparator.naturalOrder()));
 
     assert countPileColor(blackPile, Color.BLACK) == countPileColor(redPile, Color.RED);
     assert redPile.size() + blackPile.size() == 26;
