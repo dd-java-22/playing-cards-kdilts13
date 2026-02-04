@@ -5,7 +5,6 @@ import edu.cnm.deepdive.cards.model.Deck;
 import edu.cnm.deepdive.cards.model.Suit.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.random.RandomGenerator;
 
@@ -17,6 +16,16 @@ public class Trick {
   private final List<Card> blackPile;
   private final List<Card> redPile;
 
+  public record TrickResult(List<Card> blackPile, List<Card> redPile) {
+    @Override
+    public String toString() {
+      long redInRedCount = countPileColor(redPile, Color.RED);
+      long blackInBlackCount = countPileColor(blackPile, Color.BLACK);
+
+      return "Red pile (" + redInRedCount + "): " + redPile + "\nBlack pile: (" + blackInBlackCount + "): " + blackPile;
+    }
+  }
+
   public Trick(Deck deck, RandomGenerator rng) {
     this.deck = deck;
     this.rng = rng;
@@ -25,7 +34,7 @@ public class Trick {
     redPile = new ArrayList<>();
   }
 
-  public void perform(boolean doSwap) {
+  public void perform() {
     deck.shuffle(rng);
 
     blackPile.clear();
@@ -43,17 +52,9 @@ public class Trick {
         redPile.add(nextCard);
       }
     }
+  }
 
-    if (doSwap) {
-      int maxSwap = Math.min(redPile.size(), blackPile.size());
-      int numSwaps = rng.nextInt(maxSwap) + 1;
-
-      for (int i = 0; i < numSwaps; i++) {
-        redPile.add(blackPile.removeFirst());
-        blackPile.add(redPile.removeFirst());
-      }
-    }
-
+  public void sortAndAssert() {
     blackPile.sort(Comparator.comparing(Card::getColor).thenComparing(Card::compareTo));
 
     redPile.sort(Comparator.comparing(Card::getColor, Comparator.reverseOrder()).thenComparing(Comparator.naturalOrder()));
@@ -63,29 +64,23 @@ public class Trick {
     assert deck.isEmpty();
   }
 
-  public void reveal() {
-    System.out.println(">> redPile " + redPile);
-    System.out.println(">> blackPile " + blackPile);
+  public int swap() {
+    int maxSwap = Math.min(redPile.size(), blackPile.size());
+    int numSwaps = rng.nextInt(maxSwap) + 1;
 
-    System.out.println(">> redPile.size() " + redPile.size());
-    System.out.println(">> blackPile.size() " + blackPile.size());
+    for (int i = 0; i < numSwaps; i++) {
+      redPile.add(blackPile.removeFirst());
+      blackPile.add(redPile.removeFirst());
+    }
 
-    System.out.println(
-        ">> countPileColor(redPile, Color.RED) " + countPileColor(redPile, Color.RED));
-    System.out.println(
-        ">> countPileColor(blackPile, Color.BLACK) " + countPileColor(blackPile, Color.BLACK));
+    return numSwaps;
+  }
+
+  public TrickResult getResult() {
+   return new TrickResult(blackPile, redPile);
   }
 
   private static int countPileColor(List<Card> pile, Color color) {
-    Iterator<Card> itr = pile.iterator();
-    int count = 0;
-
-    while (itr.hasNext()) {
-      if (itr.next().getColor() == color) {
-        count++;
-      }
-    }
-
-    return count;
+    return (int) pile.stream().filter((Card card) -> card.getColor() == color).count();
   }
 }
