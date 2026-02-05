@@ -7,7 +7,9 @@ import edu.cnm.deepdive.cards.service.Trick;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.random.RandomGenerator;
+import java.util.stream.Collectors;
 
 public class View {
 
@@ -16,6 +18,15 @@ public class View {
 
   private static final Comparator<Card> RED_FIRST_COMPARATOR =
       Comparator.comparing(Card::getColor, Comparator.reverseOrder()).thenComparing(Comparator.naturalOrder());
+
+  public static final String BUNDLE_BASE_NAME = "card";
+  private static final String COMPOSITION_FORMAT_KEY = "composition-format";
+
+  private static final ResourceBundle bundle;
+
+  static {
+    bundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME);
+  }
 
   public static int countPileColor(List<Card> pile, Color color) {
     return (int) pile.stream().filter((Card card) -> card.getColor() == color).count();
@@ -74,8 +85,30 @@ public class View {
       long redInRedCount = countPileColor(redPile, Color.RED);
       long blackInBlackCount = countPileColor(blackPile, Color.BLACK);
 
-      return "Red pile (" + redInRedCount + "): " + redPile +
-          "\nBlack pile: (" + blackInBlackCount + "): " + blackPile;
+      String compositionFormat = bundle.getString(COMPOSITION_FORMAT_KEY);
+
+      String blackPileRepr = blackPile
+          .stream()
+          .map((card) -> {
+            return compositionFormat.formatted(
+                bundle.getString(card.getRank().name()),
+                bundle.getString(card.getSuit().name())
+            );
+          })
+          .collect(Collectors.joining(", "));
+
+      String redPileRepr = redPile
+          .stream()
+          .map((card) -> {
+            return compositionFormat.formatted(
+                bundle.getString(card.getRank().name()),
+                bundle.getString(card.getSuit().name())
+            );
+          })
+          .collect(Collectors.joining(", "));
+
+      return "Red pile (" + redInRedCount + "): " + redPileRepr +
+          "\nBlack pile: (" + blackInBlackCount + "): " + blackPileRepr;
     }
   }
 }
