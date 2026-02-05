@@ -13,18 +13,5 @@ public enum Rank {
   TEN,
   JACK,
   QUEEN,
-  KING;
-
-  @Override
-  public String toString() {
-    int value = this.ordinal() + 1;
-
-    return switch (value) {
-      case 1 -> "A";
-      case 11 -> "J";
-      case 12 -> "Q";
-      case 13 -> "K";
-      default -> "" + value;
-    };
-  }
+  KING
 }
