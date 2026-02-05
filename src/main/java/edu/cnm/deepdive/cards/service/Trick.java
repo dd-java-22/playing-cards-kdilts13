@@ -47,11 +47,7 @@ public class Trick {
     }
   }
 
-  public void sortAndAssert() {
-    blackPile.sort(Comparator.comparing(Card::getColor).thenComparing(Card::compareTo));
-
-    redPile.sort(Comparator.comparing(Card::getColor, Comparator.reverseOrder()).thenComparing(Comparator.naturalOrder()));
-
+  public void validate() {
     assert View.countPileColor(blackPile, Color.BLACK) == View.countPileColor(redPile, Color.RED);
     assert redPile.size() + blackPile.size() == 26;
     assert deck.isEmpty();

@@ -18,51 +18,57 @@ public class View {
       Comparator.comparing(Card::getColor, Comparator.reverseOrder()).thenComparing(Comparator.naturalOrder());
 
   public static int countPileColor(List<Card> pile, Color color) {
-        return (int) pile.stream().filter((Card card) -> card.getColor() == color).count();
-      }
+    return (int) pile.stream().filter((Card card) -> card.getColor() == color).count();
+  }
+
+  public void printStatus(String text, Object o) {
+    System.out.println(text);
+
+    if (o != null) {
+      System.out.println(o);
+    }
+
+    System.out.println();
+  }
 
   public void perform () {
-    System.out.println("Are you ready for a card trick?");
-    System.out.println();
+    printStatus("Are you ready for a card trick?", null);
 
     Deck deck = new Deck();
-
-    System.out.println("Here is the deck we are starting with: ");
-    System.out.println(deck);
-    System.out.println();
+    printStatus("Here is the deck we are starting with: ", deck);
 
     RandomGenerator rng = RandomGenerator.getDefault();
-
     Trick trick = new Trick(deck, rng);
 
     trick.perform();
-
-    Map<Color, List<Card>> result = trick.getResult();
-    TrickResult representation = new TrickResult(result.get(Color.BLACK), result.get(Color.RED));
-
-    System.out.println("Count into red pile and black pile:");
-    System.out.println(representation);
-    System.out.println();
+    TrickResult representation = new TrickResult(trick.getResult());
+    printStatus("Count into red pile and black pile:", representation);
 
     int numSwaps = trick.swap();
+    representation = new TrickResult(trick.getResult());
+    printStatus("Swapped " + numSwaps + " cards between our piles:", representation);
 
-    result = trick.getResult();
-    representation = new TrickResult(result.get(Color.BLACK), result.get(Color.RED));
-
-    System.out.println("Swapped " + numSwaps + " cards between our piles:");
-    System.out.println(representation);
-    System.out.println();
-
-    trick.sortAndAssert();
-
-    result = trick.getResult();
-    representation = new TrickResult(result.get(Color.BLACK), result.get(Color.RED));
-
-    System.out.println("Sorted result:");
-    System.out.println(representation);
+    trick.validate();
   }
 
   public record TrickResult(List<Card> blackPile, List<Card> redPile) {
+
+    public TrickResult(Map<Color, List<Card>> piles) {
+      List<Card> sortedBlackPile = piles
+          .get(Color.BLACK)
+          .stream()
+          .sorted(BLACK_FIRST_COMPARATOR)
+          .toList();
+
+      List<Card> sortedRedPile = piles
+          .get(Color.RED)
+          .stream()
+          .sorted(RED_FIRST_COMPARATOR)
+          .toList();
+
+      this(sortedBlackPile, sortedRedPile);
+    }
+
     @Override
     public String toString() {
       long redInRedCount = countPileColor(redPile, Color.RED);
